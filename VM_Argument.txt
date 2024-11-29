@@ -1,0 +1,10 @@
+--module-path "C:\...\...\...\Framework-Layer-Architecture\JavaFX\javafx-sdk-17.0.7\lib"
+--add-modules javafx.controls, javafx.fxml
+
+
+==========================
+Kalo Error Pake Yg Dibawah
+==========================
+--module-path "C:\...\...\...\Framework-Layer-Architecture\JavaFX\javafx-sdk-17.0.7\lib"
+--add-modules javafx.controls
+--add-modules javafx.fxml
