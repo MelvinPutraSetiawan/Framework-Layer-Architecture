@@ -11,9 +11,11 @@ public class Session {
 	
 	public static void setCurrentUser(User user) {
 		currentUser = user;
+		System.out.println("Logged in as : "+user.getName()+" | Email : "+user.getEmail());
 	}
 	
 	public static void clearSession() {
 		currentUser = null;
+		System.out.println("Logout!");
 	}
 }

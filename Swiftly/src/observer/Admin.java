@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Admin extends User implements Subject{
 	private ArrayList<Observer> traders = new ArrayList<>();
+	private Event currentEvent = null;
 	
 	public Admin(int id, String name, String email, String password) {
 		super(id, name, email, password);
@@ -14,6 +15,7 @@ public class Admin extends User implements Subject{
 	public void addObserver(Observer trader) {
 		// TODO Auto-generated method stub
 		traders.add(trader);
+		System.out.println("Added new Trader");
 	}
 
 	@Override
@@ -21,6 +23,7 @@ public class Admin extends User implements Subject{
 		// TODO Auto-generated method stub
 		int index = traders.indexOf(trader);
 		traders.remove(index);
+		System.out.println("Remove Trader");
 	}
 
 	@Override
@@ -30,5 +33,33 @@ public class Admin extends User implements Subject{
 			observer.update(event);
 		}
 	}
+	
+	public void createEvent(String name, String description, int discount) {
+		System.out.println("========================================");
+		System.out.println("============ Event Observer ============");
+		System.out.println("========================================");
+		System.out.println("Admin Make EVENT For Observer");
+		System.out.println("Event Name : " + name);
+		System.out.println("Event Description : " + description);
+		System.out.println("Event Discount : " + discount);
+		System.out.println("========================================");
+		this.currentEvent = new Event(name, description, discount);
+		notifyObserver(currentEvent);
+	}
 
+	public ArrayList<Observer> getTraders() {
+		return traders;
+	}
+
+	public void setTraders(ArrayList<Observer> traders) {
+		this.traders = traders;
+	}
+
+	public Event getCurrentEvent() {
+		return currentEvent;
+	}
+
+	public void setCurrentEvent(Event currentEvent) {
+		this.currentEvent = currentEvent;
+	}
 }

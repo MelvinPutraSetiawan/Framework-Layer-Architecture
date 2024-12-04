@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import observer.Trader;
 import utilities.Session;
 
 // LIST DESIGN PATTERN DIGUNAKAN:
@@ -165,9 +166,13 @@ public class Login extends Application {
 				}
         	}else {
         		formVBox.getChildren().remove(errorText);
-        		System.out.println("Logged in: "+Session.getCurrentUser().getName());
-        		Home home = new Home();
-        		home.start(primaryStage);
+        		if(Session.getCurrentUser() instanceof Trader) {
+        			Home home = new Home();
+            		home.start(primaryStage);
+        		}else {
+        			AdminDashboard adminDashboard = new AdminDashboard();
+        			adminDashboard.start(primaryStage);
+        		}
         	}
         });
         
@@ -198,6 +203,8 @@ public class Login extends Application {
     }
 
     public static void main(String[] args) {
+    	UserController userController = new UserController();
+    	userController.createAdmin();
         launch(args);
     }
 }

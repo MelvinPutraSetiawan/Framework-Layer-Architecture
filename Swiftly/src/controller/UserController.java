@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
+import observer.Admin;
 import observer.Trader;
 import observer.User;
 
@@ -10,6 +11,10 @@ public class UserController {
 	
 	public UserController() {
 		
+	}
+	
+	public void createAdmin() {
+		users.add(new Admin(1, "Admin", "admin@gmail.com", "admin1234"));
 	}
 	
 	// Register User Checking
@@ -38,6 +43,7 @@ public class UserController {
 		return null;
 	}
 	
+	// Login User
 	public String loginUser(String email, String password) {
 		if(email.isEmpty() || password.isEmpty()) {
 			return "All field must be filled!";
@@ -51,5 +57,13 @@ public class UserController {
 			}
 		}
 		return "Invalid user and password!";
+	}
+
+	public static ArrayList<User> getUsers() {
+		return users;
+	}
+
+	public static void setUsers(ArrayList<User> users) {
+		UserController.users = users;
 	}
 }

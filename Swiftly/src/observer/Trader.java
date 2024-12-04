@@ -12,5 +12,9 @@ public class Trader extends User implements Observer{
 	public void update(Event event) {
 		// TODO Auto-generated method stub
 		this.event = event;
+		System.out.println("========================================");
+		System.out.println("Observer Name : " + this.getName());
+		System.out.println("Notified Event : " + event.getName());
+		System.out.println("========================================");
 	}
 }
