@@ -1,23 +1,32 @@
-package model;
+package observer;
 
-public class User {
-	private int id, money;
+import utilities.Session;
+
+public class User{
+	private int id;
 	private String name, email, password;
 	
-	public User(int id, int money, String name, String email, String password) {
+	public User(int id, String name, String email, String password) {
 		this.id = id;
-		this.money = money;
 		this.name = name;
 		this.email = email;
 		this.password = password;
 	}
-
-	public int getMoney() {
-		return money;
+	
+	public void login() {
+		Session.setCurrentUser(this);
+	}
+	
+	public void logout() {
+		Session.clearSession();
 	}
 
-	public void setMoney(int money) {
-		this.money = money;
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {

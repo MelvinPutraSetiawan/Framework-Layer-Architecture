@@ -182,7 +182,6 @@ public class Register extends Application {
         	String password = passwordField.getText();
         	String confirmPassword = confirmPasswordField.getText();
         	Boolean atsChecked = ats.isSelected();
-        	System.out.println(atsChecked);
         	UserController userController = new UserController();
         	String message = userController.registerUser(name, email, password, confirmPassword, atsChecked);
         	if(message!=null) {
@@ -194,6 +193,8 @@ public class Register extends Application {
 				}
         	}else {
         		formVBox.getChildren().remove(errorText);
+        		Login login = new Login();
+        		login.start(primaryStage);
         	}
         });
         
@@ -204,6 +205,22 @@ public class Register extends Application {
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
+        });
+        
+        loginButton.setOnMouseEntered(e -> {
+            loginButton.setStyle("-fx-background-color: #0056b3;");
+        });
+
+        loginButton.setOnMouseExited(e -> {
+            loginButton.setStyle("-fx-background-color: #007bff;");
+        });
+        
+        registerButton.setOnMouseEntered(e -> {
+        	registerButton.setStyle("-fx-background-color: #0056b3;");
+        });
+
+        registerButton.setOnMouseExited(e -> {
+        	registerButton.setStyle("-fx-background-color: #007bff;");
         });
     }
 

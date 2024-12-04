@@ -2,7 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
-import model.User;
+import observer.Trader;
+import observer.User;
 
 public class UserController {
 	private static ArrayList<User> users = new ArrayList<>();
@@ -29,6 +30,26 @@ public class UserController {
 				return "Email has been used!";
 			}
 		}
+		int id=1;
+		if(users.size()>0) {
+			users.get(users.size()-1).getId();
+		}
+		users.add(new Trader(id, name, email, password));
 		return null;
+	}
+	
+	public String loginUser(String email, String password) {
+		if(email.isEmpty() || password.isEmpty()) {
+			return "All field must be filled!";
+		} else if(email.contains("@")==false) {
+			return "Email must contain '@'!";
+		}
+		for (User user : users) {
+			if(user.getEmail().equals(email) && user.getPassword().equals(password)) {
+				user.login();
+				return null;
+			}
+		}
+		return "Invalid user and password!";
 	}
 }

@@ -1,5 +1,6 @@
 package view;
 
+import controller.UserController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import utilities.Session;
 
 // LIST DESIGN PATTERN DIGUNAKAN:
 // 1. Factory Method [Creational Design Pattern]
@@ -128,6 +130,10 @@ public class Login extends Application {
         loginButton.setFont(Font.font("System Bold", 12));
         VBox.setMargin(loginButton, new Insets(20, 0, 0, 0));
         
+        Text errorText = new Text("Error Text");
+        errorText.setFill(javafx.scene.paint.Color.RED);
+        VBox.setMargin(errorText, new Insets(5, 0, 0, 0));
+        
         formVBox.getChildren().addAll(emailText, emailField, passwordText, passwordField);
         loginVBox.getChildren().addAll(loginText, formVBox, loginButton);
         rightStackPane.getChildren().addAll(rightImageView, loginVBox);
@@ -148,8 +154,21 @@ public class Login extends Application {
         loginButton.setOnAction(e->{
         	String email = emailField.getText();
         	String password = passwordField.getText();
-        	
-        	
+        	UserController userController = new UserController();
+        	String message = userController.loginUser(email, password);
+        	if(message!=null) {
+        		errorText.setText(message);
+        		try {
+        			formVBox.getChildren().add(errorText);
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+        	}else {
+        		formVBox.getChildren().remove(errorText);
+        		System.out.println("Logged in: "+Session.getCurrentUser().getName());
+        		Home home = new Home();
+        		home.start(primaryStage);
+        	}
         });
         
         registerButton.setOnAction(e->{
