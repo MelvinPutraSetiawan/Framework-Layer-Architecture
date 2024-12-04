@@ -1,10 +1,12 @@
 package view;
 
+import controller.UserController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -66,14 +68,14 @@ public class Register extends Application {
         leftImageView.setFitWidth(296);
         leftImageView.setPreserveRatio(true);
 
-        Button registerButton = new Button("Login");
-        registerButton.setStyle("-fx-background-color: #007bff;");
-        registerButton.setTextFill(javafx.scene.paint.Color.WHITE);
-        registerButton.setPadding(new Insets(5, 20, 5, 20));
-        registerButton.setFont(Font.font("System Bold", 12));
-        StackPane.setMargin(registerButton, new Insets(80, 0, 0, 0));
+        Button loginButton = new Button("Login");
+        loginButton.setStyle("-fx-background-color: #007bff;");
+        loginButton.setTextFill(javafx.scene.paint.Color.WHITE);
+        loginButton.setPadding(new Insets(5, 20, 5, 20));
+        loginButton.setFont(Font.font("System Bold", 12));
+        StackPane.setMargin(loginButton, new Insets(80, 0, 0, 0));
 
-        leftStackPane.getChildren().addAll(leftImageView, registerButton);
+        leftStackPane.getChildren().addAll(leftImageView, loginButton);
         leftVBox.getChildren().add(leftStackPane);
         
         VBox rightVBox = new VBox();
@@ -101,6 +103,16 @@ public class Register extends Application {
         formVBox.setAlignment(Pos.CENTER_LEFT);
         formVBox.setPrefSize(50, 50);
         VBox.setMargin(formVBox, new Insets(0, 40, 0, 40));
+        
+        Text nameText = new Text("Name");
+        nameText.setFill(javafx.scene.paint.Color.WHITE);
+        VBox.setMargin(nameText, new Insets(5, 0, 0, 0));
+
+        TextField nameField = new TextField();
+        nameField.setPrefSize(27, 27);
+        nameField.setPromptText("John Doe");
+        nameField.setPadding(new Insets(5, 10, 5, 10));
+        VBox.setMargin(nameField, new Insets(5, 0, 0, 0));
 
         Text emailText = new Text("Email");
         emailText.setFill(javafx.scene.paint.Color.WHITE);
@@ -121,16 +133,34 @@ public class Register extends Application {
         passwordField.setPromptText("••••••••");
         passwordField.setPadding(new Insets(5, 10, 5, 10));
         VBox.setMargin(passwordField, new Insets(5, 0, 0, 0));
-
-        Button loginButton = new Button("Register");
-        loginButton.setStyle("-fx-background-color: #007bff;");
-        loginButton.setTextFill(javafx.scene.paint.Color.WHITE);
-        loginButton.setPadding(new Insets(5, 20, 5, 20));
-        loginButton.setFont(Font.font("System Bold", 12));
-        VBox.setMargin(loginButton, new Insets(20, 0, 0, 0));
         
-        formVBox.getChildren().addAll(emailText, emailField, passwordText, passwordField);
-        loginVBox.getChildren().addAll(loginText, formVBox, loginButton);
+        Text confirmPasswordText = new Text("Confirm Password");
+        confirmPasswordText.setFill(javafx.scene.paint.Color.WHITE);
+        VBox.setMargin(confirmPasswordText, new Insets(5, 0, 0, 0));
+
+        PasswordField confirmPasswordField = new PasswordField();
+        confirmPasswordField.setPrefSize(27, 27);
+        confirmPasswordField.setPromptText("••••••••");
+        confirmPasswordField.setPadding(new Insets(5, 10, 5, 10));
+        VBox.setMargin(confirmPasswordField, new Insets(5, 0, 0, 0));
+        
+        CheckBox ats = new CheckBox("Accept term and service.");
+        ats.setTextFill(javafx.scene.paint.Color.WHITE);
+        VBox.setMargin(ats, new Insets(5, 0, 0, 0));
+
+        Button registerButton = new Button("Register");
+        registerButton.setStyle("-fx-background-color: #007bff;");
+        registerButton.setTextFill(javafx.scene.paint.Color.WHITE);
+        registerButton.setPadding(new Insets(5, 20, 5, 20));
+        registerButton.setFont(Font.font("System Bold", 12));
+        VBox.setMargin(registerButton, new Insets(5, 0, 10, 0));
+        
+        Text errorText = new Text("Error Text");
+        errorText.setFill(javafx.scene.paint.Color.RED);
+        VBox.setMargin(errorText, new Insets(5, 0, 0, 0));
+        
+        formVBox.getChildren().addAll(nameText, nameField, emailText, emailField, passwordText, passwordField, confirmPasswordText, confirmPasswordField, ats);
+        loginVBox.getChildren().addAll(loginText, formVBox, registerButton);
         rightStackPane.getChildren().addAll(rightImageView, loginVBox);
         rightVBox.getChildren().add(rightStackPane);
         
@@ -146,14 +176,34 @@ public class Register extends Application {
         // =========================
         // | Button Event Handling |
         // =========================
-        loginButton.setOnAction(e->{
+        registerButton.setOnAction(e->{
+        	String name = nameField.getText();
         	String email = emailField.getText();
         	String password = passwordField.getText();
-        	
+        	String confirmPassword = confirmPasswordField.getText();
+        	Boolean atsChecked = ats.isSelected();
+        	System.out.println(atsChecked);
+        	UserController userController = new UserController();
+        	String message = userController.registerUser(name, email, password, confirmPassword, atsChecked);
+        	if(message!=null) {
+        		errorText.setText(message);
+        		try {
+        			formVBox.getChildren().add(errorText);
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+        	}else {
+        		formVBox.getChildren().remove(errorText);
+        	}
         });
         
-        registerButton.setOnAction(e->{
-        	
+        loginButton.setOnAction(e->{
+        	Login login = new Login();
+        	try {
+				login.start(primaryStage);
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
         });
     }
 
