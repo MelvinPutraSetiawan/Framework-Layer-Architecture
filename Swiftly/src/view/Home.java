@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import utilities.Session;
 
 public class Home extends Application {
 
@@ -32,8 +33,8 @@ public class Home extends Application {
 
         // Logo
         ImageView logo = new ImageView(new Image("file:images/logo.png"));
-        logo.setFitWidth(100);
-        logo.setFitHeight(50);
+        logo.setFitWidth(170);
+        logo.setFitHeight(30);
 
         // Navbar Buttons
         Button homeBtn = new Button("Home");
@@ -130,6 +131,17 @@ public class Home extends Application {
         primaryStage.setTitle("Home Page");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        homeBtn.setOnAction(e->{
+        	Home home = new Home();
+        	home.start(primaryStage);
+        });
+        
+        logoutBtn.setOnAction(e -> {
+        	Session.clearSession();
+        	Login login = new Login();
+        	login.start(primaryStage);
+        });
     }
 
     public static void main(String[] args) {

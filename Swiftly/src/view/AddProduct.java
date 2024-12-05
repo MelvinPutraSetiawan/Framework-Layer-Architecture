@@ -25,8 +25,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import utilities.Session;
 
 public class AddProduct extends Application {
 	
@@ -41,8 +43,8 @@ public class AddProduct extends Application {
 
         // Logo
         ImageView logo = new ImageView(new Image("file:images/logo.png"));
-        logo.setFitWidth(100);
-        logo.setFitHeight(50);
+        logo.setFitWidth(170);
+        logo.setFitHeight(30);
 
         // Navbar Buttons
         Button homeBtn = new Button("Home");
@@ -148,6 +150,10 @@ public class AddProduct extends Application {
         HBox radioButtonBox = new HBox(20);
         radioButtonBox.setAlignment(Pos.CENTER);
         radioButtonBox.getChildren().addAll(gameVoucherRadio, inGameItemRadio);
+        
+        Text errorText = new Text("Error Text");
+        errorText.setFill(javafx.scene.paint.Color.RED);
+        VBox.setMargin(errorText, new Insets(5, 0, 0, 0));
 
         // Add all elements to the form
         form.getChildren().addAll(
@@ -191,6 +197,28 @@ public class AddProduct extends Application {
             }
             ProductController productController = new ProductController();
             String error = productController.createProduct(name, description, priceText, gameVoucher, inGameItem, vouchers, quantityText, imageBytes);
+            if(error!=null) {
+            	errorText.setText(error);
+            	try {
+            		form.getChildren().add(errorText);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+            }else {
+            	Home home = new Home();
+            	home.start(primaryStage);
+            }
+        });
+        
+        homeBtn.setOnAction(e->{
+        	Home home = new Home();
+        	home.start(primaryStage);
+        });
+        
+        logoutBtn.setOnAction(e -> {
+        	Session.clearSession();
+        	Login login = new Login();
+        	login.start(primaryStage);
         });
     }
 

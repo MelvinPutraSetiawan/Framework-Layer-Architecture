@@ -27,7 +27,7 @@ public class ProductController {
 	}
 	
 	public String createProduct(String name, String description, String priceText, Boolean GameVoucher, Boolean InGameItem, ArrayList<String> vouchers, String quantityText, byte[] images) {
-		if(name.isEmpty()||description.isEmpty()||priceText.isEmpty()||(GameVoucher==false && InGameItem==false)||vouchers.size()==0||quantityText.isEmpty()||images==null) {
+		if(name.isEmpty()||description.isEmpty()||priceText.isEmpty()||(GameVoucher==false && InGameItem==false)||images==null) {
 			return "All filled must be filled!";
 		}else if(Integer.parseInt(priceText)<=0) {
 			return "Price must be more than 0";
@@ -43,7 +43,7 @@ public class ProductController {
 			System.out.println("Done!");
 			System.out.println("=========================================");
 		}else if(InGameItem) {
-			if(Integer.parseInt(quantityText)<=0) {
+			if(quantityText.isEmpty() || Integer.parseInt(quantityText)<=0) {
 				return "Quantity must be more than 0";
 			}
 			System.out.println("====================================");
