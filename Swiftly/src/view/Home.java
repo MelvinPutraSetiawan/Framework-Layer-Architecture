@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import controller.ProductController;
@@ -26,6 +27,7 @@ public class Home extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+    	ProductController productController = new ProductController();
         // Navbar
         HBox navbar = new HBox(20);
         navbar.setPadding(new Insets(10));
@@ -94,20 +96,26 @@ public class Home extends Application {
         VBox productList = new VBox(10);
         productList.setPadding(new Insets(10));
         productList.setStyle("-fx-background-color: #F8F9F9;");
+        
+        ArrayList<Product> products = productController.getProducts();
+
+        for (Product product : products) {
+        	Label productLabel = new Label(product.getName() + " - $" + product.getPrice());
+            productList.getChildren().add(productLabel);
+        }
 
         // Adding banner, search bar, and product list to content
         content.getChildren().addAll(bannerImage, searchBar, productList);
         scrollPane.setContent(content);
 
         // Fetch products on search
-        ProductController productController = new ProductController();
 
         searchButton.setOnAction(event -> {
             productList.getChildren().clear();
             String keyword = searchField.getText().toLowerCase();
-            List<Product> products = productController.getProducts();
+            ArrayList<Product> products1 = productController.getProducts();
 
-            for (Product product : products) {
+            for (Product product : products1) {
                 if (product.getName().toLowerCase().contains(keyword)) {
                     Label productLabel = new Label(product.getName() + " - $" + product.getPrice());
                     productList.getChildren().add(productLabel);
