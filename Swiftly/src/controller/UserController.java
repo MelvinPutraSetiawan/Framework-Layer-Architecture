@@ -15,6 +15,7 @@ public class UserController {
 	
 	public void createAdmin() {
 		users.add(new Admin(1, "Admin", "admin@gmail.com", "admin1234"));
+		users.add(new Trader(2, "Trader", "trader@gmail.com", "trader1234"));
 	}
 	
 	// Register User Checking
