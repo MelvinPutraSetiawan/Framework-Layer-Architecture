@@ -13,10 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -25,7 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import utilities.Session;
 
-public class Home extends Application {
+public class MyProduct extends Application {
 	ProductController productController = new ProductController();
 	UserController userController = new UserController();
     @Override
@@ -65,34 +63,6 @@ public class Home extends Application {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         VBox content = new VBox(20);
-
-        // Banner Image
-        ImageView bannerImage = new ImageView(new Image("file:images/SWIFTLY.png"));
-        bannerImage.setFitWidth(1280);
-        bannerImage.setFitHeight(400);
-        bannerImage.setPreserveRatio(false);
-
-        // Search Bar
-        HBox searchBar = new HBox(10);
-        searchBar.setAlignment(Pos.CENTER);
-        searchBar.setPadding(new Insets(20, 10, 20, 10));
-
-        TextField searchField = new TextField();
-        searchField.setPromptText("Search for products...");
-        searchField.setPrefWidth(1000);
-
-        Button searchButton = new Button("Search");
-        searchButton.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white;");
-        
-        Button addProductButton = new Button("+ Add Product");
-        addProductButton.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white;");
-
-        addProductButton.setOnAction(e->{
-        	AddProduct addProduct = new AddProduct();
-        	addProduct.start(primaryStage);
-        });
-        
-        searchBar.getChildren().addAll(searchField, searchButton, addProductButton);
         
         ArrayList<Product> products = productController.getProducts();
 
@@ -107,65 +77,22 @@ public class Home extends Application {
         int column = 0;
         int row = 0;
         for (Product product : products) {
-        	VBox productCard = createProductCard(product);
-        	Button productButton = new Button();
-        	productButton.setGraphic(productCard);
-        	productButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
-        	
-        	productButton.setOnAction(e -> {
-        	    ProductDetail productDetail = new ProductDetail();
-        	    productDetail.show(primaryStage, product);
-        	});
-            productList.add(productButton, column, row);
+        	if(product.getCreatorId() == Session.getCurrentUser().getId()) {
+        		VBox productCard = createProductCard(primaryStage, product);
+                productList.add(productCard, column, row);
 
-            column++;
-            if (column == 6) {
-                column = 0;
-                row++;
-            }
+                column++;
+                if (column == 6) {
+                    column = 0;
+                    row++;
+                }
+        	}
         }
 
-        // Adding banner, search bar, and product list to content
-        content.getChildren().addAll(bannerImage, searchBar, productList);
+        // Adding product list to content
+        content.getChildren().addAll(productList);
         scrollPane.setContent(content);
-
-        // Fetch products on search
-
-        searchButton.setOnAction(event -> {
-            productList.getChildren().clear();
-            String keyword = searchField.getText().toLowerCase();
-            ArrayList<Product> products1 = productController.getProducts();
-            
-            int column1=0;
-            int row1=0;
-            for (Product product : products1) {
-                if (product.getName().toLowerCase().contains(keyword)) {
-                	VBox productCard = createProductCard(product);
-                	Button productButton = new Button();
-                	productButton.setGraphic(productCard);
-                	productButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
-                	
-                	productButton.setOnAction(e -> {
-                		ProductDetail productDetail = new ProductDetail();
-                	    productDetail.show(primaryStage, product);
-                	});
-                    productList.add(productButton, column1, row1);
-
-                    column1++;
-                    if (column1 == 6) {
-                        column1 = 0;
-                        row1++;
-                    }
-                }
-            }
-        });
-
-        searchField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                searchButton.fire();
-            }
-        });
-
+        
         // Main Layout
         BorderPane root = new BorderPane();
         root.setTop(navbar);
@@ -194,7 +121,7 @@ public class Home extends Application {
         });
     }
     
-    private VBox createProductCard(Product product) {
+    private VBox createProductCard(Stage primaryStage, Product product) {
         // Product image
     	// Assuming product.getImage() returns a byte[]
     	byte[] imageData = product.getImage();
@@ -228,9 +155,36 @@ public class Home extends Application {
         // Product price
         Label priceLabel = new Label("Rp." + product.getPrice());
         priceLabel.setStyle("-fx-text-fill: green;");
+        
+        // Update and Delete Buttons
+        Button updateButton = new Button("Update");
+        updateButton.setStyle(
+            "-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5 15; -fx-font-size: 12px; -fx-background-radius: 5;"
+        );
+        updateButton.setOnAction(event -> {
+            System.out.println("Update clicked for product: " + product.getName());
+            // Add your update logic here
+        });
+
+        Button deleteButton = new Button("Delete");
+        deleteButton.setStyle(
+            "-fx-background-color: #F44336; -fx-text-fill: white; -fx-padding: 5 15; -fx-font-size: 12px; -fx-background-radius: 5;"
+        );
+        deleteButton.setOnAction(event -> {
+            System.out.println("Delete clicked for product: " + product.getName());
+            ProductController productController = new ProductController();
+            productController.deleteProduct(product);
+            MyProduct myProduct = new MyProduct();
+        	myProduct.start(primaryStage);
+        });
+
+        // Combine buttons in an HBox
+        HBox buttonBox = new HBox(10, updateButton, deleteButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setPadding(new Insets(10, 0, 0, 0));
 
         // Combine into a VBox
-        VBox productCard = new VBox(10, productImage, nameLabel, sellerLabel, priceLabel);
+        VBox productCard = new VBox(10, productImage, nameLabel, sellerLabel, priceLabel, buttonBox);
         productCard.setStyle("-fx-border-color: lightgray; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10; -fx-background-color: white;");
         return productCard;
     }

@@ -59,7 +59,16 @@ public class UserController {
 		}
 		return "Invalid user and password!";
 	}
-
+	
+	public User getUserById(int UserId)
+	{
+		for (User user : users) {
+			if (user.getId()==UserId) {
+				return user;
+			}
+		}
+		return null;
+	}
 	public static ArrayList<User> getUsers() {
 		return users;
 	}

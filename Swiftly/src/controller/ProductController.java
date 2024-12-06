@@ -56,4 +56,9 @@ public class ProductController {
 		}
 		return null;
 	}
+	
+	public void deleteProduct(Product product) {
+		int index = products.indexOf(product);
+		products.remove(index);
+	}
 }

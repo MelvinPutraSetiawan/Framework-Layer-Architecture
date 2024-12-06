@@ -220,6 +220,11 @@ public class AddProduct extends Application {
         	Login login = new Login();
         	login.start(primaryStage);
         });
+        
+        myProductBtn.setOnAction(e->{
+        	MyProduct myProduct = new MyProduct();
+        	myProduct.start(primaryStage);
+        });
     }
 
     public static void main(String[] args) {
