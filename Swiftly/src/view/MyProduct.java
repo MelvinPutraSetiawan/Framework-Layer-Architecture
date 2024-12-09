@@ -164,6 +164,7 @@ public class MyProduct extends Application {
         updateButton.setOnAction(event -> {
             System.out.println("Update clicked for product: " + product.getName());
             // Add your update logic here
+            new UpdateProduct().start(primaryStage, product);
         });
 
         Button deleteButton = new Button("Delete");

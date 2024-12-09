@@ -61,4 +61,8 @@ public class ProductController {
 		int index = products.indexOf(product);
 		products.remove(index);
 	}
+	
+	public void updateProduct() {
+		
+	}
 }
