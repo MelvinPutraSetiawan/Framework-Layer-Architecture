@@ -82,6 +82,7 @@ public class UserOrder {
 
         // Filter orders for the current user
         for (Order order : allOrders) {
+        	System.out.println(order.getBuyerId() + "|" + currentUserId);
             if (order.getBuyerId() == currentUserId) {
                 userOrders.add(order);
             }

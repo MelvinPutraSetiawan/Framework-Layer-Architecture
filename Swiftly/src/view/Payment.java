@@ -119,6 +119,7 @@ public class Payment {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Payment Successful!", ButtonType.OK);
             alert.showAndWait();
             orderController.nextState(order);
+            new UserOrder().show(primaryStage);
         });
 
         Button cancelButton = new Button("Cancel");
