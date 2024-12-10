@@ -162,8 +162,7 @@ public class MyProduct extends Application {
             "-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5 15; -fx-font-size: 12px; -fx-background-radius: 5;"
         );
         updateButton.setOnAction(event -> {
-            System.out.println("Update clicked for product: " + product.getName());
-            // Add your update logic here
+            System.out.println("[SYSTEM] : Update clicked for product: " + product.getName());
             new UpdateProduct().start(primaryStage, product);
         });
 
@@ -172,7 +171,7 @@ public class MyProduct extends Application {
             "-fx-background-color: #F44336; -fx-text-fill: white; -fx-padding: 5 15; -fx-font-size: 12px; -fx-background-radius: 5;"
         );
         deleteButton.setOnAction(event -> {
-            System.out.println("Delete clicked for product: " + product.getName());
+            System.out.println("[SYSTEM] : Delete clicked for product: " + product.getName());
             ProductController productController = new ProductController();
             productController.deleteProduct(product);
             MyProduct myProduct = new MyProduct();

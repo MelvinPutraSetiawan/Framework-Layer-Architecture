@@ -1,9 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 
+import factory.GameVoucher;
 import factory.GameVoucherFactory;
+import factory.InGameItem;
 import factory.InGameItemFactory;
 import factory.Product;
 import factory.ProductFactory;
@@ -60,9 +61,34 @@ public class ProductController {
 	public void deleteProduct(Product product) {
 		int index = products.indexOf(product);
 		products.remove(index);
+		System.out.println("[SYSTEM] : Completed removing product!");
 	}
 	
-	public void updateProduct() {
-		
+	public String updateProduct(Product product, String name, String description, String priceText, ArrayList<String> vouchers, String quantityText, byte[] imageBytes) {
+		if(name.isEmpty()||description.isEmpty()||priceText.isEmpty()||imageBytes==null) {
+			return "All filled must be filled!";
+		}else if(Integer.parseInt(priceText)<=0) {
+			return "Price must be more than 0";
+		}else if(product instanceof GameVoucher) {
+			if(vouchers.size()==0) {
+				return "Input vouchers codes!";
+			}
+			product.setImage(imageBytes);
+			product.setName(name);
+			product.setDescription(description);
+			product.setPrice(Integer.parseInt(priceText));
+			((GameVoucher) product).setVoucherCodes(vouchers);
+		}else if(product instanceof InGameItem) {
+			if(quantityText.isEmpty() || Integer.parseInt(quantityText)<=0) {
+				return "Quantity must be more than 0";
+			}
+			product.setImage(imageBytes);
+			product.setName(name);
+			product.setDescription(description);
+			product.setPrice(Integer.parseInt(priceText));
+			((InGameItem) product).setQuantity(Integer.parseInt(quantityText));
+		}
+		System.out.println("[SYSTEM] : Complete updating product!");
+		return null;
 	}
 }

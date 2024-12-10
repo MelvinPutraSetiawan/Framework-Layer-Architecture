@@ -2,6 +2,7 @@ package view;
 
 import java.io.ByteArrayInputStream;
 
+import controller.OrderController;
 import factory.GameVoucher;
 import factory.InGameItem;
 import factory.Product;
@@ -10,8 +11,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -19,6 +23,8 @@ import javafx.stage.Stage;
 import utilities.Session;
 
 public class ProductDetail {
+	
+	OrderController orderController = new OrderController();
 
     public void show(Stage primaryStage, Product product) {
     	// Navbar
@@ -49,65 +55,94 @@ public class ProductDetail {
         HBox.setHgrow(navButtons, Priority.ALWAYS);
 
         navbar.getChildren().addAll(logo, navButtons);
-        
-        homeBtn.setOnAction(e->{
-        	Home home = new Home();
-        	home.start(primaryStage);
+
+        // Navbar Button Actions
+        homeBtn.setOnAction(e -> {
+            Home home = new Home();
+            home.start(primaryStage);
         });
-        
+
         logoutBtn.setOnAction(e -> {
-        	Session.clearSession();
-        	Login login = new Login();
-        	login.start(primaryStage);
+            Session.clearSession();
+            Login login = new Login();
+            login.start(primaryStage);
         });
-        
-        // Create a VBox for layout
-        VBox root = new VBox(20);
-        root.setPadding(new Insets(20));
+
+        myProductBtn.setOnAction(e -> {
+            MyProduct myProduct = new MyProduct();
+            myProduct.start(primaryStage);
+        });
 
         // Product image
         ImageView productImage = new ImageView();
         try {
             productImage.setImage(new Image(new ByteArrayInputStream(product.getImage())));
-            productImage.setFitWidth(200);
-            productImage.setFitHeight(200);
+            productImage.setFitWidth(300);
+            productImage.setFitHeight(300);
             productImage.setPreserveRatio(true);
         } catch (Exception e) {
             System.err.println("Failed to load product image: " + e.getMessage());
-            productImage.setImage(new Image("https://via.placeholder.com/200")); // Default image
+            productImage.setImage(new Image("https://via.placeholder.com/300")); // Default image
         }
 
-        // Product name
+        // Product details
         Label nameLabel = new Label("Name: " + product.getName());
-        nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
 
-        // Product price
-        Label priceLabel = new Label("Price: $" + product.getPrice());
-        priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: green;");
+        Label priceLabel = new Label("Price: Rp. " + product.getPrice());
+        priceLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: green;");
 
-        // Product description
         Label descriptionLabel = new Label("Description: " + product.getDescription());
         descriptionLabel.setWrapText(true);
+        descriptionLabel.setStyle("-fx-font-size: 14px;");
 
-        // Product quantity
-        Label quantityLabel = new Label();
-        if (product instanceof InGameItem) {
-            quantityLabel.setText("Quantity: " + ((InGameItem) product).getQuantity());
-        } else {
-            quantityLabel.setText("Quantity: " + ((GameVoucher) product).getVoucherCodes().size());
-        }
+        // Quantity spinner
+        int maxQuantity = product instanceof InGameItem
+                ? ((InGameItem) product).getQuantity()
+                : ((GameVoucher) product).getVoucherCodes().size();
+
+        Label stockLabel = new Label("Available Stock: " + maxQuantity);
+        stockLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: gray;");
+
+        Label quantityLabel = new Label("Select Quantity:");
+        quantityLabel.setStyle("-fx-font-size: 14px;");
+
+        Spinner<Integer> quantitySpinner = new Spinner<>();
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, maxQuantity, 1);
+        quantitySpinner.setValueFactory(valueFactory);
+
+        HBox quantityBox = new HBox(10, quantityLabel, quantitySpinner);
+        quantityBox.setAlignment(Pos.CENTER_LEFT);
 
         // Checkout button
         Button checkoutButton = new Button("Checkout");
+        checkoutButton.setStyle("-fx-background-color: #2C3E50; -fx-text-fill: white; -fx-font-size: 16px;");
         checkoutButton.setOnAction(event -> {
-            System.out.println("Checkout for product: " + product.getName());
+            int selectedQuantity = quantitySpinner.getValue();
+            System.out.println("[SYSTEM] : Checking out [ Quantity : " + selectedQuantity + " ] Product: " + product.getName());
             // Add checkout logic here
+            new Payment().show(primaryStage, orderController.CheckOut(product, selectedQuantity, Session.getCurrentUser().getId()));
         });
 
-        // Add components to the layout
-        root.getChildren().addAll(navbar, productImage, nameLabel, priceLabel, descriptionLabel, quantityLabel, checkoutButton);
+        // Layout
+        VBox productInfo = new VBox(10, nameLabel, priceLabel, descriptionLabel, stockLabel, quantityBox, checkoutButton);
+        productInfo.setAlignment(Pos.CENTER_LEFT);
+        productInfo.setPadding(new Insets(20));
+        productInfo.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: lightgray; -fx-border-radius: 10; -fx-padding: 15;");
+        productInfo.setPrefHeight(300);
+        productInfo.setMinHeight(300);
+        productInfo.setMaxHeight(300);
 
-        // Create a scene and set it on the primaryStage
+        HBox productContent = new HBox(30, productImage, productInfo);
+        productContent.setPadding(new Insets(30));
+        productContent.setAlignment(Pos.CENTER);
+
+        // Main layout
+        BorderPane root = new BorderPane();
+        root.setTop(navbar);
+        root.setCenter(productContent);
+
+        // Scene
         Scene scene = new Scene(root, 1280, 720);
         primaryStage.setTitle("Product Detail");
         primaryStage.setScene(scene);

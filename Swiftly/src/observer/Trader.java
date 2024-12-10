@@ -17,4 +17,12 @@ public class Trader extends User implements Observer{
 		System.out.println("Notified Event : " + event.getName());
 		System.out.println("========================================");
 	}
+
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
+	}
 }

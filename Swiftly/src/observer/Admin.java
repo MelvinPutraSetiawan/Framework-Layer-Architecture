@@ -21,6 +21,7 @@ public class Admin extends User implements Subject{
 	@Override
 	public void removeObserver(Observer trader) {
 		// TODO Auto-generated method stub
+		((Trader) trader).setEvent(null);
 		int index = traders.indexOf(trader);
 		traders.remove(index);
 		System.out.println("Remove Trader");

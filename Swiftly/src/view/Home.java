@@ -192,6 +192,10 @@ public class Home extends Application {
         	MyProduct myProduct = new MyProduct();
         	myProduct.start(primaryStage);
         });
+        
+        orderBtn.setOnAction(e->{
+        	new UserOrder().show(primaryStage);
+        });
     }
     
     private VBox createProductCard(Product product) {
