@@ -13,7 +13,7 @@ public class PaymentState implements State{
 
 	@Override
 	public String cancel(Order order) {
-		// TODO Auto-generated method stub
+		order.setCurrentState(new CanceledState());
 		return null;
 	}
 

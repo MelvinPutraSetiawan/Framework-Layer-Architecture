@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import observer.Trader;
 import utilities.Session;
 
 public class ProductDetail {
@@ -113,15 +114,22 @@ public class ProductDetail {
 
         HBox quantityBox = new HBox(10, quantityLabel, quantitySpinner);
         quantityBox.setAlignment(Pos.CENTER_LEFT);
-
+        
         // Checkout button
         Button checkoutButton = new Button("Checkout");
         checkoutButton.setStyle("-fx-background-color: #2C3E50; -fx-text-fill: white; -fx-font-size: 16px;");
         checkoutButton.setOnAction(event -> {
             int selectedQuantity = quantitySpinner.getValue();
+            double discount = 0.0;
+            if (Session.getCurrentUser() instanceof Trader && ((Trader) Session.getCurrentUser()).getEvent() != null) {
+                discount = ((Trader) Session.getCurrentUser()).getEvent().getDiscount();
+            }
+
+            // Calculate total price with discount
+            Double totalPrice = (product.getPrice() * selectedQuantity) * (1 - discount/100);
             System.out.println("[SYSTEM] : Checking out [ Quantity : " + selectedQuantity + " ] Product: " + product.getName());
             // Add checkout logic here
-            new Payment().show(primaryStage, orderController.CheckOut(product, selectedQuantity, Session.getCurrentUser().getId()));
+            new Payment().show(primaryStage, orderController.CheckOut(product, selectedQuantity, Session.getCurrentUser().getId(), totalPrice));
         });
 
         // Layout

@@ -1,11 +1,15 @@
 package view;
 
+import java.io.ByteArrayInputStream;
+
 import adapter.Dollar;
 import adapter.DollarAdapter;
 import adapter.EURO;
 import adapter.EUROAdapter;
 import adapter.Rupiah;
 import controller.OrderController;
+import factory.GameVoucher;
+import factory.InGameItem;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,13 +21,13 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import observer.Trader;
 import state.Order;
 import utilities.Session;
-
-import java.io.ByteArrayInputStream;
 
 public class Payment {
     OrderController orderController = new OrderController();
@@ -119,7 +123,12 @@ public class Payment {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Payment Successful!", ButtonType.OK);
             alert.showAndWait();
             orderController.nextState(order);
-            new UserOrder().show(primaryStage);
+            if(order.getProduct() instanceof GameVoucher) {
+            	new ShowVouchers().start(primaryStage, (GameVoucher) order.getProduct(), order.getQuantity());
+            }else {
+            	((InGameItem) order.getProduct()).subtractQuantity(order.getQuantity());
+            }
+//            new UserOrder().show(primaryStage);
         });
 
         Button cancelButton = new Button("Cancel");
@@ -138,7 +147,7 @@ public class Payment {
 
         // Scene and stage setup
         Scene scene = new Scene(root, 1280, 720);
-        StackPane container = new StackPane(root); // Center the box
+        StackPane container = new StackPane(root);
         container.setAlignment(Pos.CENTER);
         Scene centeredScene = new Scene(container, 1280, 720);
         container.setStyle("-fx-background-color: #f4f4f4;");

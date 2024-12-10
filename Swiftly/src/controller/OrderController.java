@@ -7,10 +7,10 @@ import factory.Product;
 import state.Order;
 
 public class OrderController {
-	private ArrayList<Order> orders = new ArrayList<>();
+	private static ArrayList<Order> orders = new ArrayList<>();
 	
-	public Order CheckOut(Product product, int quantity, int buyerId) {
-		Order newOrder = new Order(product, quantity, buyerId);
+	public Order CheckOut(Product product, int quantity, int buyerId, Double total) {
+		Order newOrder = new Order(product, quantity, buyerId, total);
 		orders.add(newOrder);
 		return newOrder;
 	}

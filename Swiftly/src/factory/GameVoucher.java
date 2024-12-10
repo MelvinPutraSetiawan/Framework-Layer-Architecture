@@ -19,4 +19,13 @@ public class GameVoucher extends Product{
 	public void setVoucherCodes(ArrayList<String> voucherCodes) {
 		this.voucherCodes = voucherCodes;
 	}
+	
+	public ArrayList<String> getVouchersForQuantity(int quantity) {
+        ArrayList<String> selectedVouchers = new ArrayList<>();
+        for (int i = 0; i < quantity; i++) {
+            selectedVouchers.add(voucherCodes.get(0));
+            voucherCodes.remove(0);
+        }
+        return selectedVouchers;
+    }
 }

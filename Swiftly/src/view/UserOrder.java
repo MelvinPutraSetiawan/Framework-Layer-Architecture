@@ -82,7 +82,6 @@ public class UserOrder {
 
         // Filter orders for the current user
         for (Order order : allOrders) {
-        	System.out.println(order.getBuyerId() + "|" + currentUserId);
             if (order.getBuyerId() == currentUserId) {
                 userOrders.add(order);
             }
@@ -96,8 +95,11 @@ public class UserOrder {
             orderBox.setStyle("-fx-padding: 10; -fx-border-color: #ddd; -fx-border-radius: 5;");
 
             // Order details
-            Label orderIdLabel = new Label("Order ID: #" + order.getBuyerId());
+            Label orderIdLabel = new Label("Order Buyer ID: #" + order.getBuyerId());
             orderIdLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            
+            Label quantityLabel = new Label("Qty. " + order.getQuantity());
+            quantityLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 
             Label priceLabel = new Label("Price: Rp " + order.getProduct().getPrice());
             priceLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -107,7 +109,7 @@ public class UserOrder {
             statusLabel.setStyle("-fx-background-color: #f1c40f; -fx-padding: 5; -fx-border-radius: 5;");
             
             // Add components to the order box
-            orderBox.getChildren().addAll(orderIdLabel, priceLabel, statusLabel);
+            orderBox.getChildren().addAll(orderIdLabel, quantityLabel, priceLabel, statusLabel);
             ordersContainer.getChildren().add(orderBox);
         }
 

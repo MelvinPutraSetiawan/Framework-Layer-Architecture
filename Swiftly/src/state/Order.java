@@ -7,11 +7,13 @@ public class Order {
 	private Product product;
     private int quantity;
     private int buyerId;
+    private Double total;
 
-    public Order(Product product, int quantity, int buyerId) {
+    public Order(Product product, int quantity, int buyerId, Double total) {
         this.product = product;
         this.quantity = quantity;
         this.buyerId = buyerId;
+        this.total = total;
         this.currentState = new PaymentState();
     }
 	
@@ -53,5 +55,13 @@ public class Order {
 
 	public void setCurrentState(State currentState) {
 		this.currentState = currentState;
+	}
+
+	public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
 	}
 }

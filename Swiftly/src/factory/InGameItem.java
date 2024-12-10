@@ -17,4 +17,8 @@ public class InGameItem extends Product{
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}	
+	
+	public void subtractQuantity(int quantity) {
+		this.quantity = this.quantity - quantity;
+	}
 }
