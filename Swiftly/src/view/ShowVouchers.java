@@ -9,71 +9,62 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import state.Order;
 
 public class ShowVouchers {
 
-    public void start(Stage primaryStage, GameVoucher gameVoucher, int quantity) {
-        // Navbar
-        VBox navbar = new VBox();
-        navbar.setPadding(new Insets(10));
-        navbar.setStyle("-fx-background-color: #2C3E50;");
-
-        Label titleLabel = new Label("Order Summary");
-        titleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white;");
-        navbar.getChildren().add(titleLabel);
-
-        // Fetch the voucher codes for the given quantity
-        ArrayList<String> purchasedVouchers = gameVoucher.getVouchersForQuantity(quantity);
-
-        // Display the purchased vouchers
-        VBox content = new VBox(10);
-        content.setPadding(new Insets(20));
-        content.setAlignment(Pos.CENTER_LEFT);
-
+    public void start(Stage primaryStage, Order order, GameVoucher gameVoucher, int quantity) {
+        // Main content box
+        VBox contentBox = new VBox(20);
+        contentBox.setPadding(new Insets(30));
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.setStyle("-fx-background-color: #f8f9fa; -fx-border-color: #2C3E50; -fx-border-radius: 10px; -fx-padding: 20px; -fx-border-width: 2px;");
+        contentBox.setMaxWidth(500);
+        contentBox.setMaxHeight(500);
+        
+        // Product information
         Label productInfo = new Label("Product: " + gameVoucher.getName());
-        productInfo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        productInfo.setStyle("-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #2C3E50;");
+
+        Label priceInfo = new Label("Price: $" + gameVoucher.getPrice());
+        priceInfo.setStyle("-fx-font-size: 16px; -fx-text-fill: #2C3E50;");
 
         Label totalLabel = new Label("Total Quantity: " + quantity);
-        totalLabel.setStyle("-fx-font-size: 14px;");
+        totalLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #2C3E50;");
 
-        VBox voucherList = new VBox(5);
+        Label voucherHeading = new Label("Your Voucher Codes:");
+        voucherHeading.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #2C3E50;");
+
+        // Display vouchers
+        VBox voucherList = new VBox(10);
+        voucherList.setAlignment(Pos.CENTER);
+        ArrayList<String> purchasedVouchers = gameVoucher.getVouchersForQuantity(quantity);
+
         for (String voucher : purchasedVouchers) {
             Label voucherLabel = new Label(voucher);
-            voucherLabel.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #ccc; -fx-border-radius: 5px; -fx-padding: 5px;");
+            voucherLabel.setStyle("-fx-background-color: #ffffff; -fx-border-color: #ccc; -fx-border-radius: 5px; -fx-padding: 10px; -fx-font-size: 14px;");
             voucherList.getChildren().add(voucherLabel);
         }
 
-        content.getChildren().addAll(productInfo, totalLabel, new Label("Your Voucher Codes:"), voucherList);
-
-        // Back to Home Button
-        Button backButton = new Button("Back to Home");
-        backButton.setStyle("-fx-background-color: #2C3E50; -fx-text-fill: white;");
-        backButton.setOnAction(e -> {
-            Home home = new Home();
-            home.start(primaryStage);
-        });
-
-        // Confirm Button
         Button confirmButton = new Button("Confirm");
-        confirmButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+        confirmButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-padding: 10px 20px;");
         confirmButton.setOnAction(e -> {
-            System.out.println("Order Confirmed!");
-            // You can redirect or perform other actions after confirmation
+            order.nextState();
+            new UserOrder().show(primaryStage);
         });
 
-        VBox buttonContainer = new VBox(10, confirmButton, backButton);
-        buttonContainer.setAlignment(Pos.CENTER);
+        HBox buttonBox = new HBox(20, confirmButton);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        VBox mainContent = new VBox(20, content, buttonContainer);
-        mainContent.setPadding(new Insets(20));
-        mainContent.setAlignment(Pos.CENTER);
+        // Combine all components
+        contentBox.getChildren().addAll(productInfo, priceInfo, totalLabel, voucherHeading, voucherList, buttonBox);
 
         // Main Layout
         BorderPane root = new BorderPane();
-        root.setTop(navbar);
-        root.setCenter(mainContent);
+        root.setCenter(contentBox);
 
         // Scene and Stage
         Scene scene = new Scene(root, 1280, 720);

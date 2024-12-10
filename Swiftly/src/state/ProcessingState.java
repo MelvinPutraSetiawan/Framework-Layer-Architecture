@@ -4,8 +4,8 @@ public class ProcessingState implements State{
 
 	@Override
 	public String handle(Order order) {
-		// TODO Auto-generated method stub
-		return "";
+		order.setCurrentState(new CompleteState());
+		return "Order completed!";
 	}
 
 	@Override

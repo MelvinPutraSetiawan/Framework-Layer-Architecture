@@ -23,8 +23,8 @@ public class OrderController {
 		order.cancelOrder();
 	}
 	
-	public void nextState(Order order) {
-		order.nextState();
+	public String nextState(Order order) {
+		return order.nextState();
 	}
 
 	public ArrayList<Order> getOrders() {

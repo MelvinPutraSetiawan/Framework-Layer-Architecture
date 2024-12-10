@@ -17,8 +17,8 @@ public class Order {
         this.currentState = new PaymentState();
     }
 	
-    public void nextState() {
-        currentState.handle(this);
+    public String nextState() {
+        return currentState.handle(this);
     }
     
     public String getCurrentState() {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import controller.ProductController;
 import controller.UserController;
 import factory.Product;
+import observer.Event;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,14 +23,26 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import observer.Trader;
 import utilities.Session;
 
 public class Home extends Application {
+	// ===============================================================
+	// |                       Variable Used                         |
+	// ===============================================================
 	ProductController productController = new ProductController();
 	UserController userController = new UserController();
+	Trader currentUser = (Trader) Session.getCurrentUser();
+	Event currentEvent = currentUser.getEvent();
     @Override
     public void start(Stage primaryStage) {
+    	// ===============================================================
+    	// |                     UI/Front End Codes                      |
+    	// ===============================================================
         // Navbar
         HBox navbar = new HBox(20);
         navbar.setPadding(new Insets(10));
@@ -96,41 +109,47 @@ public class Home extends Application {
         
         ArrayList<Product> products = productController.getProducts();
 
-        // Create a grid pane
+        // Product Grid Pane
         GridPane productList = new GridPane();
-        productList.setHgap(20); // Horizontal gap
-        productList.setVgap(20); // Vertical gap
+        productList.setHgap(20);
+        productList.setVgap(20); 
         productList.setStyle("-fx-background-color: #F8F9F9;");
         productList.setPadding(new Insets(10, 60, 60, 60));
+        
+        Label noProduct = new Label("No products found!");
+        noProduct.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        noProduct.setTextFill(Color.GRAY);
+        noProduct.setAlignment(Pos.CENTER);
+        noProduct.setPadding(new Insets(20, 20, 20, 60));
+        
+        if (products.isEmpty()) {
+            content.getChildren().addAll(bannerImage, searchBar, noProduct);
+        }else {
+            int column = 0;
+            int row = 0;
+            for (Product product : products) {
+            	VBox productCard = createProductCard(product);
+            	Button productButton = new Button();
+            	productButton.setGraphic(productCard);
+            	productButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
+            	
+            	productButton.setOnAction(e -> {
+            	    ProductDetail productDetail = new ProductDetail();
+            	    productDetail.show(primaryStage, product);
+            	});
+                productList.add(productButton, column, row);
 
-        // Populate the grid with products
-        int column = 0;
-        int row = 0;
-        for (Product product : products) {
-        	VBox productCard = createProductCard(product);
-        	Button productButton = new Button();
-        	productButton.setGraphic(productCard);
-        	productButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
-        	
-        	productButton.setOnAction(e -> {
-        	    ProductDetail productDetail = new ProductDetail();
-        	    productDetail.show(primaryStage, product);
-        	});
-            productList.add(productButton, column, row);
-
-            column++;
-            if (column == 6) {
-                column = 0;
-                row++;
+                column++;
+                if (column == 6) {
+                    column = 0;
+                    row++;
+                }
             }
+            content.getChildren().addAll(bannerImage, searchBar, productList);
         }
-
-        // Adding banner, search bar, and product list to content
-        content.getChildren().addAll(bannerImage, searchBar, productList);
         scrollPane.setContent(content);
 
-        // Fetch products on search
-
+        // Purpose: Search Logic, Searching for products.
         searchButton.setOnAction(event -> {
             productList.getChildren().clear();
             String keyword = searchField.getText().toLowerCase();
@@ -158,6 +177,11 @@ public class Home extends Application {
                     }
                 }
             }
+            if(column1 == 0 && row1 == 0) {
+            	content.getChildren().add(noProduct);
+            }else {
+            	content.getChildren().remove(noProduct);
+            }
         });
 
         searchField.setOnKeyPressed(event -> {
@@ -177,6 +201,10 @@ public class Home extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
+       
+        // ===============================================================
+        // |                   Button Event Handling                     |
+        // ===============================================================
         homeBtn.setOnAction(e->{
         	Home home = new Home();
         	home.start(primaryStage);
@@ -196,44 +224,39 @@ public class Home extends Application {
         orderBtn.setOnAction(e->{
         	new UserOrder().show(primaryStage);
         });
+        
+        incomingOrderBtn.setOnAction(e->{
+        	new IncomingOrder().show(primaryStage);
+        });
     }
     
+    // Purpose: Use to make the product card UI
     private VBox createProductCard(Product product) {
-        // Product image
-    	// Assuming product.getImage() returns a byte[]
     	byte[] imageData = product.getImage();
     	ImageView productImage = new ImageView();
 
     	if (imageData != null) {
     	    try {
-    	        // Convert byte[] to InputStream
     	        ByteArrayInputStream inputStream = new ByteArrayInputStream(imageData);
-    	        // Create Image from InputStream
     	        Image image = new Image(inputStream);
     	        productImage.setImage(image);
     	    } catch (Exception e) {
     	    	
     	    }
     	}
-
-    	// Set size for the image view
     	productImage.setFitWidth(150);
     	productImage.setFitHeight(150);
     	productImage.setPreserveRatio(false);
 
-        // Product name
         Label nameLabel = new Label(product.getName());
         nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        
-        // Seller name
+
         Label sellerLabel = new Label("By " + userController.getUserById(product.getCreatorId()).getName());
         nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 10px;");
 
-        // Product price
         Label priceLabel = new Label("Rp." + product.getPrice());
         priceLabel.setStyle("-fx-text-fill: green;");
 
-        // Combine into a VBox
         VBox productCard = new VBox(10, productImage, nameLabel, sellerLabel, priceLabel);
         productCard.setStyle("-fx-border-color: lightgray; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10; -fx-background-color: white;");
         return productCard;

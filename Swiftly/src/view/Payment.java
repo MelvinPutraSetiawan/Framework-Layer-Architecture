@@ -124,9 +124,10 @@ public class Payment {
             alert.showAndWait();
             orderController.nextState(order);
             if(order.getProduct() instanceof GameVoucher) {
-            	new ShowVouchers().start(primaryStage, (GameVoucher) order.getProduct(), order.getQuantity());
+            	new ShowVouchers().start(primaryStage, order, (GameVoucher) order.getProduct(), order.getQuantity());
             }else {
             	((InGameItem) order.getProduct()).subtractQuantity(order.getQuantity());
+            	new UserOrder().show(primaryStage);
             }
 //            new UserOrder().show(primaryStage);
         });

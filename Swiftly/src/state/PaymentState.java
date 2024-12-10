@@ -1,13 +1,9 @@
 package state;
 
 public class PaymentState implements State{
-	public PaymentState() {
-		
-	}
-
 	@Override
 	public String handle(Order order) {
-		// TODO Auto-generated method stub
+		order.setCurrentState(new ProcessingState());
 		return null;
 	}
 
