@@ -22,23 +22,20 @@ import utilities.Session;
 
 // LIST DESIGN PATTERN DIGUNAKAN:
 // 1. Factory Method [Creational Design Pattern]
-//    - Use for creating objects like User, Order, Product, etc., depending on the user role (Admin or Customer).
-//    - Example: UserFactory that instantiates different types of users based on the input.
+//    - Digunakan untuk melakukan pembuatan InGameItem/GameVouchers. Ada di package: factory
 // 2. Observer [Behavioral Design Pattern]
-//    - Use for updating the UI or notifying other components when an order status changes or inventory updates.
-//    - Example: Notify users when stock for a product is updated. Or their order status has changes.
-// 3. Template Method [Behavioral Design Pattern]
-//    - Use for defining a common flow for order processing while allowing specific steps to vary.
-//    - Example: A ProcessOrder class with steps like validation, payment, and shipment, where shipment details vary based on the delivery method.
-// 4. Adapter [Structural Design Pattern]
-//    - Use for multiple payment method
-//    - Example: Bank, QRIS, Paypal
-// 5. Adapter Decorator [Structural Design Pattern]
-//    - Use for each product where some product can have promo, refund, etc tag
+//    - Digunakan supaya admin dapat menambahkan user yang akan bisa menerima event2 tertentu. Ada di package: observer
+// 3. Adapter [Structural Design Pattern]
+//    - Digunakan untuk menampilkan harga barang yang dibeli dengan mata uang berbeda-beda. Mulai dari rupiah, dollar, atau euro. Ada di package : adapter
+// 4. State Design Pattern [Behavioral Design Pattern]
+//    - Sebuah Order akan memiliki 4 state, yaitu Payment, Processing, Complete, dan Canceled. Ada di package : State
 
 public class Login extends Application {
 	@Override
     public void start(Stage primaryStage) {
+		// ===============================================================
+		// |                     UI/Front End Codes                      |
+		// ===============================================================
         StackPane root = new StackPane();
         root.setPrefSize(1280, 720);
         
@@ -149,9 +146,9 @@ public class Login extends Application {
         primaryStage.setTitle("Swiftly");
         primaryStage.show();
         
-        // =========================
-        // | Button Event Handling |
-        // =========================
+        // ===============================================================
+        // |                   Button Event Handling                     |
+        // ===============================================================
         loginButton.setOnAction(e->{
         	String email = emailField.getText();
         	String password = passwordField.getText();

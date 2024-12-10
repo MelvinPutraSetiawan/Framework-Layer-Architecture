@@ -13,12 +13,13 @@ public class UserController {
 		
 	}
 	
+	// Purpose: Seeding data into the ArrayList of users.
 	public void createAdmin() {
 		users.add(new Admin(1, "Admin", "admin@gmail.com", "admin1234"));
 		users.add(new Trader(2, "Trader", "trader@gmail.com", "trader1234"));
 	}
 	
-	// Register User Checking
+	// Purpose: Validating the data and register a new user into the arraylist of users.
 	public String registerUser(String name, String email, String password, String confirmPassword, Boolean atsChecked) {
 		if(name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
 			return "All field must be filled!";
@@ -44,7 +45,7 @@ public class UserController {
 		return null;
 	}
 	
-	// Login User
+	// Purpose: Checking if the data match with the current data from the ArrayList. If yes, then login the user.
 	public String loginUser(String email, String password) {
 		if(email.isEmpty() || password.isEmpty()) {
 			return "All field must be filled!";
@@ -60,6 +61,7 @@ public class UserController {
 		return "Invalid user and password!";
 	}
 	
+	// Purpose: Search user by Id.
 	public User getUserById(int UserId)
 	{
 		for (User user : users) {
@@ -69,6 +71,7 @@ public class UserController {
 		}
 		return null;
 	}
+	
 	public static ArrayList<User> getUsers() {
 		return users;
 	}

@@ -57,23 +57,6 @@ public class ProductDetail {
 
         navbar.getChildren().addAll(logo, navButtons);
 
-        // Navbar Button Actions
-        homeBtn.setOnAction(e -> {
-            Home home = new Home();
-            home.start(primaryStage);
-        });
-
-        logoutBtn.setOnAction(e -> {
-            Session.clearSession();
-            Login login = new Login();
-            login.start(primaryStage);
-        });
-
-        myProductBtn.setOnAction(e -> {
-            MyProduct myProduct = new MyProduct();
-            myProduct.start(primaryStage);
-        });
-
         // Product image
         ImageView productImage = new ImageView();
         try {
@@ -155,5 +138,32 @@ public class ProductDetail {
         primaryStage.setTitle("Product Detail");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        // ===============================================================
+        // |                   Button Event Handling                     |
+        // ===============================================================
+        homeBtn.setOnAction(e->{
+        	Home home = new Home();
+        	home.start(primaryStage);
+        });
+        
+        logoutBtn.setOnAction(e -> {
+        	Session.clearSession();
+        	Login login = new Login();
+        	login.start(primaryStage);
+        });
+        
+        myProductBtn.setOnAction(e->{
+        	MyProduct myProduct = new MyProduct();
+        	myProduct.start(primaryStage);
+        });
+        
+        orderBtn.setOnAction(e->{
+        	new UserOrder().show(primaryStage);
+        });
+        
+        incomingOrderBtn.setOnAction(e->{
+        	new IncomingOrder().show(primaryStage);
+        });
     }
 }

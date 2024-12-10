@@ -52,23 +52,6 @@ public class UserOrder {
 
         navbar.getChildren().addAll(logo, navButtons);
 
-        // Navbar Button Actions
-        homeBtn.setOnAction(e -> {
-            Home home = new Home();
-            home.start(primaryStage);
-        });
-
-        logoutBtn.setOnAction(e -> {
-            Session.clearSession();
-            Login login = new Login();
-            login.start(primaryStage);
-        });
-
-        myProductBtn.setOnAction(e -> {
-            MyProduct myProduct = new MyProduct();
-            myProduct.start(primaryStage);
-        });
-
         // Orders Container
         VBox ordersContainer = new VBox();
         ordersContainer.setSpacing(10);
@@ -140,5 +123,32 @@ public class UserOrder {
         primaryStage.setTitle("My Orders");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        // ===============================================================
+        // |                   Button Event Handling                     |
+        // ===============================================================
+        homeBtn.setOnAction(e->{
+        	Home home = new Home();
+        	home.start(primaryStage);
+        });
+        
+        logoutBtn.setOnAction(e -> {
+        	Session.clearSession();
+        	Login login = new Login();
+        	login.start(primaryStage);
+        });
+        
+        myProductBtn.setOnAction(e->{
+        	MyProduct myProduct = new MyProduct();
+        	myProduct.start(primaryStage);
+        });
+        
+        orderBtn.setOnAction(e->{
+        	new UserOrder().show(primaryStage);
+        });
+        
+        incomingOrderBtn.setOnAction(e->{
+        	new IncomingOrder().show(primaryStage);
+        });
     }
 }

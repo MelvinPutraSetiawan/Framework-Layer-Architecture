@@ -37,7 +37,6 @@ public class Home extends Application {
 	ProductController productController = new ProductController();
 	UserController userController = new UserController();
 	Trader currentUser = (Trader) Session.getCurrentUser();
-	Event currentEvent = currentUser.getEvent();
     @Override
     public void start(Stage primaryStage) {
     	// ===============================================================
@@ -116,6 +115,23 @@ public class Home extends Application {
         productList.setStyle("-fx-background-color: #F8F9F9;");
         productList.setPadding(new Insets(10, 60, 60, 60));
         
+        HBox eventBox = new HBox();
+        eventBox.setAlignment(Pos.CENTER);
+        eventBox.setPadding(new Insets(0));
+        eventBox.setStyle("-fx-background-color: #E74C3C;");
+        eventBox.setPrefHeight(30);
+        if (currentUser.getEvent() != null) {
+            Event event = currentUser.getEvent();
+            Label eventLabel = new Label(
+                event.getName() + " - " + event.getDescription() + " - " + event.getDiscount() + "%"
+            );
+            eventLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            eventLabel.setTextFill(javafx.scene.paint.Color.WHITE);
+            eventLabel.setMaxWidth(Double.MAX_VALUE);
+            eventLabel.setAlignment(Pos.CENTER);
+            eventBox.getChildren().add(eventLabel);
+        }
+        
         Label noProduct = new Label("No products found!");
         noProduct.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         noProduct.setTextFill(Color.GRAY);
@@ -123,7 +139,7 @@ public class Home extends Application {
         noProduct.setPadding(new Insets(20, 20, 20, 60));
         
         if (products.isEmpty()) {
-            content.getChildren().addAll(bannerImage, searchBar, noProduct);
+            content.getChildren().addAll(bannerImage, eventBox, searchBar, noProduct);
         }else {
             int column = 0;
             int row = 0;
@@ -145,7 +161,7 @@ public class Home extends Application {
                     row++;
                 }
             }
-            content.getChildren().addAll(bannerImage, searchBar, productList);
+            content.getChildren().addAll(bannerImage, eventBox, searchBar, productList);
         }
         scrollPane.setContent(content);
 

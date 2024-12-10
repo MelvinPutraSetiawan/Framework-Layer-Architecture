@@ -15,14 +15,18 @@ public class OrderController {
 		return newOrder;
 	}
 	
+	// Purpose: Use for getting the total price of an item
+	// Design Pattern: Used for ADAPTER Design pattern
 	public Double getPrice(Rupiah rupiah, Double price) {
 		return rupiah.calculatePrice(price);
 	}
 	
-	public void CancelOrder(Order order) {
-		order.cancelOrder();
+	// Purpose: Change the order into "Canceled State".
+	public String CancelOrder(Order order) {
+		return order.cancelOrder();
 	}
 	
+	// Purpose: Changing the order state into the next state.
 	public String nextState(Order order) {
 		return order.nextState();
 	}

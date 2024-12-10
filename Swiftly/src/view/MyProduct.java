@@ -20,6 +20,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import utilities.Session;
 
@@ -88,9 +91,16 @@ public class MyProduct extends Application {
                 }
         	}
         }
-
-        // Adding product list to content
-        content.getChildren().addAll(productList);
+        if(column == 0 && row == 0) {
+        	Label noProduct = new Label("You have no Products.");
+        	noProduct.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        	noProduct.setTextFill(Color.GRAY);
+        	noProduct.setAlignment(Pos.CENTER);
+            content.getChildren().addAll(noProduct);
+        }else {
+        	content.getChildren().addAll(productList);
+        }
+        
         scrollPane.setContent(content);
         
         // Main Layout
@@ -104,6 +114,9 @@ public class MyProduct extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
+        // ===============================================================
+        // |                   Button Event Handling                     |
+        // ===============================================================
         homeBtn.setOnAction(e->{
         	Home home = new Home();
         	home.start(primaryStage);
@@ -118,6 +131,14 @@ public class MyProduct extends Application {
         myProductBtn.setOnAction(e->{
         	MyProduct myProduct = new MyProduct();
         	myProduct.start(primaryStage);
+        });
+        
+        orderBtn.setOnAction(e->{
+        	new UserOrder().show(primaryStage);
+        });
+        
+        incomingOrderBtn.setOnAction(e->{
+        	new IncomingOrder().show(primaryStage);
         });
     }
     

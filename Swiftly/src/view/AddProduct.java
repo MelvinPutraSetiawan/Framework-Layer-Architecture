@@ -210,6 +210,9 @@ public class AddProduct extends Application {
             }
         });
         
+        // ===============================================================
+        // |                   Button Event Handling                     |
+        // ===============================================================
         homeBtn.setOnAction(e->{
         	Home home = new Home();
         	home.start(primaryStage);
@@ -224,6 +227,14 @@ public class AddProduct extends Application {
         myProductBtn.setOnAction(e->{
         	MyProduct myProduct = new MyProduct();
         	myProduct.start(primaryStage);
+        });
+        
+        orderBtn.setOnAction(e->{
+        	new UserOrder().show(primaryStage);
+        });
+        
+        incomingOrderBtn.setOnAction(e->{
+        	new IncomingOrder().show(primaryStage);
         });
     }
 

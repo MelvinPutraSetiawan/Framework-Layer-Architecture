@@ -186,12 +186,31 @@ public class UpdateProduct {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // Navbar Button Actions
-        homeBtn.setOnAction(e -> new Home().start(primaryStage));
-        myProductBtn.setOnAction(e -> new MyProduct().start(primaryStage));
+        // ===============================================================
+        // |                   Button Event Handling                     |
+        // ===============================================================
+        homeBtn.setOnAction(e->{
+        	Home home = new Home();
+        	home.start(primaryStage);
+        });
+        
         logoutBtn.setOnAction(e -> {
-            Session.clearSession();
-            new Login().start(primaryStage);
+        	Session.clearSession();
+        	Login login = new Login();
+        	login.start(primaryStage);
+        });
+        
+        myProductBtn.setOnAction(e->{
+        	MyProduct myProduct = new MyProduct();
+        	myProduct.start(primaryStage);
+        });
+        
+        orderBtn.setOnAction(e->{
+        	new UserOrder().show(primaryStage);
+        });
+        
+        incomingOrderBtn.setOnAction(e->{
+        	new IncomingOrder().show(primaryStage);
         });
     }
 }

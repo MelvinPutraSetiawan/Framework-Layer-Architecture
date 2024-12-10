@@ -27,6 +27,7 @@ public class ProductController {
 		ProductController.products = products;
 	}
 	
+	// Purpose: This function is used to create a product and validate the input is valid.
 	public String createProduct(String name, String description, String priceText, Boolean GameVoucher, Boolean InGameItem, ArrayList<String> vouchers, String quantityText, byte[] images) {
 		if(name.isEmpty()||description.isEmpty()||priceText.isEmpty()||(GameVoucher==false && InGameItem==false)||images==null) {
 			return "All filled must be filled!";
@@ -58,14 +59,16 @@ public class ProductController {
 		return null;
 	}
 	
+	// Purpose: Used to delete the product from the current arraylist.
 	public void deleteProduct(Product product) {
 		int index = products.indexOf(product);
 		products.remove(index);
 		System.out.println("[SYSTEM] : Completed removing product!");
 	}
 	
+	// Purpose: Used to validate the data and update the product base on the data given.
 	public String updateProduct(Product product, String name, String description, String priceText, ArrayList<String> vouchers, String quantityText, byte[] imageBytes) {
-		if(name.isEmpty()||description.isEmpty()||priceText.isEmpty()||imageBytes==null) {
+		if(name.isEmpty()||description.isEmpty()||priceText.isEmpty()) {
 			return "All filled must be filled!";
 		}else if(Integer.parseInt(priceText)<=0) {
 			return "Price must be more than 0";
@@ -73,7 +76,7 @@ public class ProductController {
 			if(vouchers.size()==0) {
 				return "Input vouchers codes!";
 			}
-			product.setImage(imageBytes);
+			if(imageBytes!=null) product.setImage(imageBytes);
 			product.setName(name);
 			product.setDescription(description);
 			product.setPrice(Integer.parseInt(priceText));
